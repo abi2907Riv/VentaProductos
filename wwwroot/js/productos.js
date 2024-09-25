@@ -65,11 +65,20 @@ function MostrarProductos(data) {
 // }
 
 function CrearProducto() {
-    // var nombreProd = document.getElementById("Nombre").value;
-    // if (nombreProd == "" || nombreProd == null) {
-    //     return mensajesError('#error', null, "Por favor ingrese un Nombre para el Producto.");
-    // }
+    var nombreProd = document.getElementById("Nombre").value;
+    if (nombreProd == "" || nombreProd == null) {
+        return mensajesError('#error', null, "Por favor ingrese un Nombre para el Producto.");
+    }
 
+    var precioV = document.getElementById("PrecioVenta").value;
+    if (precioV == "" || precioV == null) {
+        return mensajesError('#error', null, "Por favor ingrese un Precio de Venta para el Producto.");
+    }
+
+    var precioC = document.getElementById("PrecioCompra").value;
+    if (precioC == "" || precioC == null) {
+        return mensajesError('#error', null, "Por favor ingrese un Precio de Compra para el Producto.");
+    }
     let producto = {
         nombreProducto: document.getElementById("Nombre").value,
         cantidad: document.getElementById("Cantidad").value,
@@ -88,17 +97,20 @@ function CrearProducto() {
     )
     .then(response => response.json())
     .then(data =>{
-        // if(data.status == undefined){
+        if(data.status == undefined){
             document.getElementById("Nombre").value = "";
             document.getElementById("Cantidad").value = 0;
             document.getElementById("PrecioVenta").value = 0;
             document.getElementById("PrecioCompra").value = 0;
 
+            $("error").empty();
+            $("#error").attr("hidden", true);
+
             $('#modalAgregarProductos').modal('hide');
             ObtenerProductos();
-        // } else {
-        //     mensajesError('#error', data);
-        // }
+        } else {
+            mensajesError('#error', data);
+        }
             
     })
     .catch(error => console.log("Hubo un error al guardar el Producto nuevo, verifique el mensaje de error: ", error))
@@ -145,6 +157,17 @@ function BuscarProductoId(id) {
 function EditarProducto() {
     let idProducto = document.getElementById("IdProducto").value;
 
+
+    var precioV = document.getElementById("PrecioVentaEditar").value;
+    if (precioV == "" || precioV == null) {
+        return mensajesError('#erroreditar', null, "Por favor ingrese un Precio de Venta para el Producto.");
+    }
+
+    var precioC = document.getElementById("PrecioCompraEditar").value;
+    if (precioC == "" || precioC == null) {
+        return mensajesError('#erroreditar', null, "Por favor ingrese un Precio de Compra para el Producto.");
+    }
+
     let editarProducto = {
         id: idProducto,
         nombreProducto: document.getElementById("NombreEditar").value,
@@ -161,7 +184,7 @@ function EditarProducto() {
         body: JSON.stringify(editarProducto)
     })
     .then(data => {
-
+        if(data.status == undefined){
             document.getElementById("IdProducto").value = 0;
             document.getElementById("NombreEditar").value = "";
             document.getElementById("CantidadEditar").value = 0;
@@ -169,29 +192,33 @@ function EditarProducto() {
             document.getElementById("PrecioCompraEditar").value = 0;
             $('#modalEditarProductos').modal('hide');
             ObtenerProductos();
+
+        } else {
+            mensajesError('#error', data);
+        }
     })
     .catch(error => console.error("No se pudo acceder a la api, verifique el mensaje de error: ", error))
 }
 
 
-// function mensajesError(id, data, mensaje) {
-//     $(id).empty();
-//     if (data != null) {
-//         $.each(data.errors, function(index, item) {
-//             $(id).append(
-//                 "<ol>",
-//                 "<li>" + item + "</li>",
-//                 "</ol>"
-//             )
-//         })
-//     }
-//     else{
-//         $(id).append(
-//             "<ol>",
-//             "<li>" + mensaje + "</li>",
-//             "</ol>"
-//         )
-//     }
+function mensajesError(id, data, mensaje) {
+    $(id).empty();
+    if (data != null) {
+        $.each(data.errors, function(index, item) {
+            $(id).append(
+                "<ol>",
+                "<li>" + item + "</li>",
+                "</ol>"
+            )
+        })
+    }
+    else{
+        $(id).append(
+            "<ol>",
+            "<li>" + mensaje + "</li>",
+            "</ol>"
+        )
+    }
     
-//     $(id).attr("hidden", false);
-// }
+    $(id).attr("hidden", false);
+}
