@@ -41,48 +41,44 @@
     <h1>Productos</h1>
     <hr>
 
-    <button class="mt-3 mb-3 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarProductos">Agregar
-      Producto</button>
+    <button class="mt-3 mb-3 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregarVentas">Agregar
+      Venta</button>
 
     <table class="table table-dark table-striped">
       <thead>
         <tr>
           <th>Id</th>
-          <th>Nombre</th>
-          <th>Cantidad</th>
-          <th>Precio Venta</th>
-          <th>Precio Compra</th>
+          <th>Fecha Venta</th>
+          <th>Finalizada</th>
+          <th>Cliente</th>
           <th></th>
           <th></th>
           <th></th>
         </tr>
       </thead>
-      <tbody id="todosLosProductos"></tbody>
+      <tbody id="todosLasVentas"></tbody>
     </table>
 
 
 
 
     <!-- MODAL -->
-    <div id="modalAgregarProductos" class="modal fade" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div id="modalAgregarVentas" class="modal fade" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Agregar Nuevo Producto</h5>
+            <h5 class="modal-title">Agregar Nuevo Venta</h5>
           </div>
           <div class="modal-body">
             <div class="row">
-              <label for="Nombre" class="form-label">Nombre</label>
-              <input type="text" id="Nombre" placeholder="Nombre del Producto" class="form-control">
+              <label for="FechaVenta" class="form-label">Fecha Venta</label>
+              <input type="datetime-local" id="FechaVenta" class="form-control">
 
-              <label for="Cantidad" class="form-label">Cantidad</label>
-              <input type="number" id="Cantidad" class="form-control">
+              <label for="Finalizada" class="form-label">Finalizada</label>
+              <input type="checkbox" id="Finalizada" class="form-control">
 
-              <label for="PrecioVenta" class="form-label">Precio Venta</label>
-              <input type="number" id="PrecioVenta" class="form-control">
-
-              <label for="PrecioCompra" class="form-label">Precio Compra</label>
-              <input type="number" id="PrecioCompra" class="form-control">
+              <label for="IdCliente" class="form-label">Cliente</label>
+              <input type="text" id="IdCliente" class="form-control">
 
               <p id="error" hidden style="color: red;"></p>
 
@@ -90,7 +86,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary" onclick="CrearProducto();">Guardar</button>
+            <button type="button" class="btn btn-primary" onclick="CrearVenta();">Guardar</button>
           </div>
         </div>
       </div>
@@ -98,35 +94,29 @@
 
 
     <!-- MODAL -->
-    <div id="modalEditarProductos" class="modal fade" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div id="modalEditarVentas" class="modal fade" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Editar Producto Existente</h5>
+            <h5 class="modal-title">Editar Venta Existente</h5>
           </div>
           <div class="modal-body">
             <div class="row">
-              <input type="number" id="IdProducto" class="form-control" readonly hidden>
+              <input type="number" id="IdCliente" class="form-control" readonly hidden>
 
-              <label for="NombreEditar" class="form-label">Nombre</label>
-              <input type="text" id="NombreEditar" placeholder="Nombre del Alumno" class="form-control">
+              <label for="FechaVentaEditar" class="form-label">Fecha Venta</label>
+              <input type="datetime-local" id="FechaVentaEditar" class="form-control">
 
-              <label for="CantidadEditar" class="form-label">Cantidad</label>
-              <input type="number" id="CantidadEditar" class="form-control">
+              <label for="FinalizadaEditar" class="form-label">Finalizada</label>
+              <input type="checkbox" id="FinalizadaEditar" class="form-control">
 
-              <label for="PrecioVentaEditar" class="form-label">Precio Venta</label>
-              <input type="number" id="PrecioVentaEditar" class="form-control">
-
-              <label for="PrecioCompraEditar" class="form-label">Precio Compra</label>
-              <input type="number" id="PrecioCompraEditar" class="form-control">
-
-              <p id="erroreditar" hidden style="color: red;"></p>
+              <p id="erroreditar" hidden></p>
 
             </div>
           </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-primary" onclick="EditarProducto();">Guardar</button>
+              <button type="button" class="btn btn-primary" onclick="EditarVenta();">Guardar</button>
             </div>
           </div>
         </div>

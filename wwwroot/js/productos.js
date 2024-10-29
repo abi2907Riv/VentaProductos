@@ -64,6 +64,7 @@ function MostrarProductos(data) {
 //     })
 // }
 
+
 function CrearProducto() {
     var nombreProd = document.getElementById("Nombre").value;
     if (nombreProd == "" || nombreProd == null) {
@@ -79,6 +80,9 @@ function CrearProducto() {
     if (precioC == "" || precioC == null) {
         return mensajesError('#error', null, "Por favor ingrese un Precio de Compra para el Producto.");
     }
+
+
+// LA PRIMER LETRA DEBE IR SIEMPRE EN MINUSCULA
     let producto = {
         nombreProducto: document.getElementById("Nombre").value,
         cantidad: document.getElementById("Cantidad").value,

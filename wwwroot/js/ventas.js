@@ -1,11 +1,11 @@
-function ObtenerClientes() {
+function ObtenerVentas() {
     fetch('https://localhost:7245/Clientes')
     .then(response => response.json())
-    .then(data => MostrarClientes(data))
+    .then(data => MostrarVentas(data))
     .catch(error => console.log("No se pudo acceder al servicio.", error));
 }
 
-function MostrarClientes(data) {
+function MostrarVentas(data) {
     let tbody = document.getElementById('todosLosClientes');
     tbody.innerHTML = '';
 
@@ -17,7 +17,7 @@ function MostrarClientes(data) {
         td0.appendChild(tdId);
 
         let td1 = tr.insertCell(1);
-        let tdName = document.createTextNode(element.nombreCliente);
+        let tdFechaVenta = document.createTextNode(element.tdFechaVenta);
         td1.appendChild(tdName);
 
         let td2 = tr.insertCell(2);

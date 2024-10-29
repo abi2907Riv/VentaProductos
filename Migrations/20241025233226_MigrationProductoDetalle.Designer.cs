@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VentaProductos.Models;
 
@@ -11,9 +12,11 @@ using VentaProductos.Models;
 namespace VentaProductos.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20241025233226_MigrationProductoDetalle")]
+    partial class MigrationProductoDetalle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,35 +51,6 @@ namespace VentaProductos.Migrations
                     b.ToTable("Clientes");
                 });
 
-            modelBuilder.Entity("VentaProductos.Models.DetalleVenta", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("IdProducto")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdVenta")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductoId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VentaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductoId");
-
-                    b.HasIndex("VentaId");
-
-                    b.ToTable("DetalleVentas");
-                });
-
             modelBuilder.Entity("VentaProductos.Models.Producto", b =>
                 {
                     b.Property<int>("Id")
@@ -103,7 +77,7 @@ namespace VentaProductos.Migrations
                     b.ToTable("Productos");
                 });
 
-            modelBuilder.Entity("VentaProductos.Models.Venta", b =>
+            modelBuilder.Entity("VentaProductos.Models.ProductoDetalle", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,52 +85,39 @@ namespace VentaProductos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ClienteId")
-                        .HasColumnType("int");
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("FechaVenta")
+                    b.Property<DateTime>("FechaTransaccion")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Finalizada")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("IdCliente")
+                    b.Property<int>("ProductoId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Tamaño")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
+                    b.HasIndex("ProductoId");
 
-                    b.ToTable("Ventas");
+                    b.ToTable("ProductoDetalle");
                 });
 
-            modelBuilder.Entity("VentaProductos.Models.DetalleVenta", b =>
+            modelBuilder.Entity("VentaProductos.Models.ProductoDetalle", b =>
                 {
                     b.HasOne("VentaProductos.Models.Producto", "Producto")
-                        .WithMany()
-                        .HasForeignKey("ProductoId");
-
-                    b.HasOne("VentaProductos.Models.Venta", "Venta")
-                        .WithMany("DetalleVenta")
-                        .HasForeignKey("VentaId");
+                        .WithMany("ProductoDetalle")
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Producto");
-
-                    b.Navigation("Venta");
                 });
 
-            modelBuilder.Entity("VentaProductos.Models.Venta", b =>
+            modelBuilder.Entity("VentaProductos.Models.Producto", b =>
                 {
-                    b.HasOne("VentaProductos.Models.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId");
-
-                    b.Navigation("Cliente");
-                });
-
-            modelBuilder.Entity("VentaProductos.Models.Venta", b =>
-                {
-                    b.Navigation("DetalleVenta");
+                    b.Navigation("ProductoDetalle");
                 });
 #pragma warning restore 612, 618
         }
