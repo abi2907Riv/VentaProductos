@@ -188,12 +188,15 @@ function EditarProducto() {
         body: JSON.stringify(editarProducto)
     })
     .then(data => {
-        if(data.status == undefined){
+        if(data.status == undefined || data.status == 204){
             document.getElementById("IdProducto").value = 0;
             document.getElementById("NombreEditar").value = "";
             document.getElementById("CantidadEditar").value = 0;
             document.getElementById("PrecioVentaEditar").value = 0;
             document.getElementById("PrecioCompraEditar").value = 0;
+
+            $("#errorEditar").empty();	
+            $("#errorEditar").attr("hidden", true);
             $('#modalEditarProductos').modal('hide');
             ObtenerProductos();
 

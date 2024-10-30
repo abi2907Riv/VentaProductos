@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VentaProductos.Models;
 
@@ -11,9 +12,11 @@ using VentaProductos.Models;
 namespace VentaProductos.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20241030213041_ModificacionModelos")]
+    partial class ModificacionModelos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,7 +151,7 @@ namespace VentaProductos.Migrations
             modelBuilder.Entity("VentaProductos.Models.Venta", b =>
                 {
                     b.HasOne("VentaProductos.Models.Cliente", "Cliente")
-                        .WithMany("Ventas")
+                        .WithMany("Venta")
                         .HasForeignKey("ClienteId");
 
                     b.Navigation("Cliente");
@@ -156,7 +159,7 @@ namespace VentaProductos.Migrations
 
             modelBuilder.Entity("VentaProductos.Models.Cliente", b =>
                 {
-                    b.Navigation("Ventas");
+                    b.Navigation("Venta");
                 });
 
             modelBuilder.Entity("VentaProductos.Models.Producto", b =>

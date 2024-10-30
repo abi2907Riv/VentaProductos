@@ -87,10 +87,17 @@ namespace VentaProductos.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProducto(int id)
         {
-            var producto = await _context.Productos.FindAsync(id);
+            var producto = await _context.Productos
+                                        .Include(p => p.DetalleVenta)
+                                        .FirstOrDefaultAsync(p => p.Id == id);
             if (producto == null)
             {
                 return NotFound();
+            }
+
+            if (producto.DetalleVenta != null && producto.DetalleVenta.Any())
+            {
+                return BadRequest("El producto tiene ventas asociados");
             }
 
             _context.Productos.Remove(producto);

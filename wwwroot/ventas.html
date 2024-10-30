@@ -78,7 +78,7 @@
               <input type="checkbox" id="Finalizada" class="form-control">
 
               <label for="IdCliente" class="form-label">Cliente</label>
-              <input type="text" id="IdCliente" class="form-control">
+              <select id="IdCliente" class="form-control"></select>
 
               <p id="error" hidden style="color: red;"></p>
 
@@ -102,7 +102,7 @@
           </div>
           <div class="modal-body">
             <div class="row">
-              <input type="number" id="IdCliente" class="form-control" readonly hidden>
+              <input type="number" id="IdVentas" class="form-control" readonly hidden>
 
               <label for="FechaVentaEditar" class="form-label">Fecha Venta</label>
               <input type="datetime-local" id="FechaVentaEditar" class="form-control">
@@ -110,7 +110,12 @@
               <label for="FinalizadaEditar" class="form-label">Finalizada</label>
               <input type="checkbox" id="FinalizadaEditar" class="form-control">
 
-              <p id="erroreditar" hidden></p>
+              <label for="IdClienteEditar" class="form-label">Cliente</label>
+              <select id="IdClienteEditar" class="form-control"></select>
+
+              <div id="mensaje"></div>
+
+              <p id="erroreditar" hidden style="color: red;"></p>
 
             </div>
           </div>
@@ -125,14 +130,73 @@
 
 
 
+    <div id="modalDetalleVentas" class="modal fade" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Detalle de una Venta</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="row">
+                      <input type="number" id="IdDetalleVentas" class="form-control" readonly hidden>
 
-    <script src="./js/productos.js"></script>
-    <script src="./lib/bootstrap/js/bootstrap.min.js"></script>
+                      <label for="IdProductosDetalle" class="form-label">Producto</label>
+                      <select id="IdProductosDetalle" class="form-control"></select>
+
+                      <!-- Botón de Guardar centrado -->
+                      <div class="text-center mt-3">
+                          <button type="button" class="btn btn-primary"
+                              onclick="GuardarDetalle();">Guardar</button>
+                      </div>
+
+                      <p id="errorDetalle" hidden style="color: red;"></p>
+                  </div>
+
+                  <!-- Tabla responsive con estilo centrado -->
+                  <div class="table-responsive mt-3">
+                      <table class="table table-dark table-striped text-center">
+                          <thead>
+                              <tr>
+                                  <th>Producto</th>
+                                  <th></th>
+                                  <th></th>
+                              </tr>
+                          </thead>
+                          <tbody id="todosLosDetalles"></tbody>
+                      </table>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+
+
+
+    <script src="./js/ventas.js"></script>
+    <script src="./js/common/ObtenerClientesDropdown.js"></script>
+    <script src="./js/common/ObtenerProductosDropdown.js"></script>
+ <script src="./lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
       integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
     <script type="text/javascript">
-      window.onload = ObtenerProductos();
+      // window.onload = ObtenerVentas();
+      // window.onload = ObtenerClientes();
+      // window.onload = ObtenerProductos();
+    window.onload = function() {
+        ObtenerVentas();
+        ObtenerClientesDropdown();
+        ObtenerProductosDropdown();
+    };
+</script>
+</body>
+
     </script>
 </body>
 

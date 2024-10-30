@@ -87,10 +87,17 @@ namespace VentaProductos.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCliente(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
+            var cliente = await _context.Clientes
+                                        .Include(c => c.Ventas)
+                                        .FirstOrDefaultAsync(c => c.Id == id);
             if (cliente == null)
             {
                 return NotFound();
+            }
+
+            if (cliente.Ventas != null && cliente.Ventas.Any())
+            {
+                return BadRequest("El cliente no puede eliminarse porque tiene ventas asociadas");
             }
 
             _context.Clientes.Remove(cliente);

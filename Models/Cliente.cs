@@ -12,4 +12,6 @@ public class Cliente
     public int Dni { get; set; }
     public float Saldo { get; set; }
 
+    public virtual ICollection<Venta>? Ventas { get; set; }
+
 }

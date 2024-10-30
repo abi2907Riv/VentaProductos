@@ -1,13 +1,15 @@
 function ObtenerVentas() {
-    fetch('https://localhost:7245/Clientes')
+    fetch('https://localhost:7245/api/Ventas')
     .then(response => response.json())
     .then(data => MostrarVentas(data))
     .catch(error => console.log("No se pudo acceder al servicio.", error));
 }
 
 function MostrarVentas(data) {
-    let tbody = document.getElementById('todosLosClientes');
+    let tbody = document.getElementById('todosLasVentas');
     tbody.innerHTML = '';
+
+    console.log(data);
 
     data.forEach(element => {
         let tr = tbody.insertRow();
@@ -17,165 +19,163 @@ function MostrarVentas(data) {
         td0.appendChild(tdId);
 
         let td1 = tr.insertCell(1);
-        let tdFechaVenta = document.createTextNode(element.tdFechaVenta);
-        td1.appendChild(tdName);
+        let tdFechaVenta = document.createTextNode(element.fechaVenta);
+        td1.appendChild(tdFechaVenta);
+
 
         let td2 = tr.insertCell(2);
-        let tdApellido = document.createTextNode(element.apellidoCliente);
-        td2.appendChild(tdApellido);
+        let estadoFinalizada = element.finalizada ? "Finalizada" : "Pendiente";
+        let tdFinalizada = document.createTextNode(estadoFinalizada);
+        td2.appendChild(tdFinalizada);
 
-        let td3 = tr.insertCell(3);
-        let tdDni = document.createTextNode(element.dni);
-        td3.appendChild(tdDni);
+        // let td3 = tr.insertCell(3);
+        // let tdCliente = document.createTextNode(element.cliente.nombreCliente);
+        // td3.appendChild(tdCliente);
 
-        let td4 = tr.insertCell(4);
-        let tdSaldo = document.createTextNode(element.saldo);
-        td4.appendChild(tdSaldo);
 
         let btnEditar = document.createElement('button');
         btnEditar.innerText = 'Modificar';
         btnEditar.setAttribute('class', 'btn btn-info');
-        btnEditar.setAttribute('onclick', `BuscarClienteId(${element.id})`);
-        let td5 = tr.insertCell(5);
-        td5.appendChild(btnEditar);
+        btnEditar.setAttribute('onclick', `BuscarVentaId(${element.id})`);
+        let td4 = tr.insertCell(3);
+        td4.appendChild(btnEditar);
 
         let btnEliminar = document.createElement('button');
         btnEliminar.innerText = 'Eliminar';
         btnEliminar.setAttribute('class', 'btn btn-danger');
-        btnEliminar.setAttribute('onclick', `EliminarCliente(${element.id})`);
-        let td6 = tr.insertCell(6);
-        td6.appendChild(btnEliminar);
+        btnEliminar.setAttribute('onclick', `EliminarVenta(${element.id})`);
+        let td5 = tr.insertCell(4);
+        td5.appendChild(btnEliminar);
+
+        let btnDetalle = document.createElement('button');
+        btnDetalle.innerText = 'Detalle';
+        btnDetalle.setAttribute('class', 'btn btn-success');
+        btnDetalle.setAttribute('onclick', `BuscarProductoDetalle(${element.id})`);
+        let td6 = tr.insertCell(5);
+        td5.appendChild(btnDetalle);
     });
 }
 
 
-function CrearCliente() {
-    var nombCliente = document.getElementById("Nombre").value;
-    if (nombCliente == "" || nombCliente == null) {
-        return mensajesError('#error', null, "Por favor ingrese un Nombre para el Cliente.");
+function CrearVenta() {
+    const IdCliente = document.getElementById('IdCliente').value;
+
+    let venta = {
+        fechaVenta: document.getElementById('FechaVenta').value,
+        finalizada: document.getElementById('Finalizada').checked,
+        idCliente: IdCliente,
+        cliente: null,
+        detalleVenta: null
     }
 
-    var dniCliente = document.getElementById("Dni").value;
-    if (dniCliente == "" || dniCliente == null) {
-        return mensajesError('#error', null, "Por favor ingrese un Dni para el Cliente.");
-    }
+    console.log(venta);
 
-    let cliente = {
-        nombreCliente: document.getElementById("Nombre").value,
-        apellidoCliente: document.getElementById("Apellido").value,
-        dni: parseInt (dniCliente),
-        saldo: document.getElementById("Saldo").value,
-    };
-
-    fetch('https://localhost:7245/Clientes',
+    fetch('https://localhost:7245/api/Ventas',
         {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
               },
-            body: JSON.stringify(cliente)
+            body: JSON.stringify(venta)
+        })
+
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(error => {throw new Error (error.message);});
         }
-    )
-    .then(response => response.json())
+        return response.json();
+    })
     .then(data =>{
-        if(data.status == undefined){
-            document.getElementById("Nombre").value = "";
-            document.getElementById("Apellido").value = "";
-            document.getElementById("Dni").value = "";
-            document.getElementById("Saldo").value = 0;
+            document.getElementById("FechaVenta").value = "";
+            document.getElementById("Finalizada").checked = false;
+            document.getElementById("IdCliente").value = 0;
 
             $("error").empty();
             $("#error").attr("hidden", true);
 
-            $('#modalAgregarClientes').modal('hide');
-            ObtenerClientes();
-
-        } else {
-            mensajesError('#error', data);
-        }
-            
+            $('#modalAgregarVentas').modal('hide');
+            ObtenerVentas();
+        // }
+        // else {
+        //     mensajesError('#error', data);
+        // }
     })
     .catch(error => console.log("Hubo un error al guardar el Cliente nuevo, verifique el mensaje de error: ", error))
 }
 
 
-function EliminarCliente(id) {
-    var siElimina = confirm("¿Esta seguro de borrar este cliente?.")
-    if (siElimina == true) {
+function EliminarVenta(id) {
+    var siEliminaVenta = confirm("¿Esta seguro de borrar esta venta?.")
+    if (siEliminaVenta == true) {
         EliminarSi(id);
     }
 }
 
 function EliminarSi(id) {
-    fetch(`https://localhost:7245/Clientes/${id}`,
+    fetch(`https://localhost:7245/api/Ventas/${id}`,
     {
         method: "DELETE"
     })
     .then(() => {
-        ObtenerClientes();
+        ObtenerVentas();
     })
     .catch(error => console.error("No se pudo acceder a la api, verifique el mensaje de error: ", error))
 }
 
-function BuscarClienteId(id) {
-    fetch(`https://localhost:7245/Clientes/${id}`,{
+function BuscarVentaId(id) {
+    fetch(`https://localhost:7245/api/Ventas/${id}`,{
         method: "GET"
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById("IdCliente").value = data.id;
-        document.getElementById("NombreEditar").value = data.nombreCliente;
-        document.getElementById("ApellidoEditar").value = data.apellidoCliente;
-        document.getElementById("DniEditar").value = data.dni;
-        document.getElementById("SaldoEditar").value = data.saldo;
+        document.getElementById("IdVentas").value = data.id;
+        document.getElementById("FechaVentaEditar").value = data.fechaVenta;
+        document.getElementById("FinalizadaEditar").checked = data.finalizada;
+        document.getElementById("IdClienteEditar").value = data.idCliente;
 
-        $('#modalEditarClientes').modal('show');
+        $('#modalEditarVentas').modal('show');
     })
     .catch(error => console.error("No se pudo acceder a la api, verifique el mensaje de error: ", error));
 }
 
-function EditarCliente() {
-    let idCliente = document.getElementById("IdCliente").value;
+function EditarVenta() {
+    let idVenta = document.getElementById("IdVentas").value;
 
-    var dniCliente = document.getElementById("DniEditar").value;
-    console.log(dniCliente)
-    if (dniCliente == 0 || dniCliente == "") {
-        console.log("pasa validacion dni")
-        return mensajesError('#errorEditar', null, "Por favor ingrese un Dni para el Cliente.");
-    }
-    console.log(dniCliente)
+    let venta = {
+        id: idVenta,
+        fechaventa: document.getElementById("FechaVentaEditar").value,
+        finalizada: document.getElementById("FinalizadaEditar").checked,
+        idCliente: document.getElementById("IdClienteEditar").value,
+        cliente: null,
+    };
 
-    let editarCliente = {
-        id: idCliente,
-        nombreCliente: document.getElementById("NombreEditar").value,
-        apellidoCliente: document.getElementById("ApellidoEditar").value,
-        dni: document.getElementById("DniEditar").value,
-        saldo: document.getElementById("SaldoEditar").value
-    }
-
-    fetch(`https://localhost:7245/Clientes/${idCliente}`, {
+    fetch(`https://localhost:7245/api/Ventas/${idVenta}`, {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(editarCliente)
+        body: JSON.stringify(venta)
     })
     .then(response => response.json())
     .then(data => {
         // console.log(data)
         if(data.status == undefined){
 
-            document.getElementById("IdCliente").value = 0;
-            document.getElementById("NombreEditar").value = "";
-            document.getElementById("ApellidoEditar").value = "";
-            document.getElementById("DniEditar").value = 0;
-            document.getElementById("SaldoEditar").value = 0;
-            $('#modalEditarClientes').modal('hide');
-            ObtenerClientes();
+            document.getElementById("IdVentas").value = 0;
+            document.getElementById("FechaVentasEditar").value = "";
+            document.getElementById("FinalizadaEditar").checked = false;
+            document.getElementById("IdClienteEditar").value = 0;
 
-        } else {
-            mensajesError('#error', data);
+            $('#errorEditar').empty();
+            $('#errorEditar').attr("hidden", true);
+            $('#modalEditarVentas').modal('hide');
+            ObtenerVentas();
+
         }
+
+        // } else {
+        //     mensajesError('#error', data);
+        // }
 
     })
     .catch(error => console.error("No se pudo acceder a la api, verifique el mensaje de error: ", error))
@@ -204,4 +204,36 @@ function mensajesError(id, data, mensaje) {
     }
     
     $(id).attr("hidden", false);
+}
+
+function BuscarProductoDetalle(id) {
+    fetch(`https://localhost:7245/api/DetalleVentas/${id}`, {
+        method: "GET"
+    })
+    .then(response => response.json())
+    .then(async data => {
+        MostrarProductosDetalle(data);
+        await ObtenerProductosDropdown();
+        FiltrarDropdownProductos();
+        document.getElementById("IdDetalleVentas").value = id;
+        $('#modalDetalleVentas').modal('show');
+    })
+    .catch(error => console.error("No se pudo acceder a la api, verifique el mensaje de error: ", error));
+}
+
+function MostrarProductosDetalle(data) {
+    $("#todosLosDetalles").empty();
+    $.each(data, function (index, item) {
+        const cantidad = item.producto.cantidad;
+        const precioVenta = item.producto.precioVenta;
+        const total = cantidad * precioVenta;
+        $('#todosLosDetalles').append(
+            `<tr>
+                <td>${item.producto.nombreProducto}</td>
+                <td>${cantidad}</td>
+                <td>${precioVenta}</td>
+                <td>${total.toFixed(2)}</td> 
+            </tr>`
+        );
+    });
 }

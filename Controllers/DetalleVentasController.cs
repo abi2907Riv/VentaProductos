@@ -21,17 +21,20 @@ namespace VentaProductos.Controllers
         }
 
         // GET: api/DetalleVentas
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<DetalleVenta>>> GetDetalleVentas()
-        {
-            return await _context.DetalleVentas.ToListAsync();
-        }
+        // [HttpGet]
+        // public async Task<ActionResult<IEnumerable<DetalleVenta>>> GetDetalleVentas()
+        // {
+        //     return await _context.DetalleVentas.ToListAsync();
+        // }
 
         // GET: api/DetalleVentas/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<DetalleVenta>> GetDetalleVenta(int id)
+        public async Task<ActionResult<List<DetalleVenta>>> GetDetalleVentas(int id)
         {
-            var detalleVenta = await _context.DetalleVentas.FindAsync(id);
+            var detalleVenta = await _context.DetalleVentas
+            .Include(x =>x.Producto)
+            .Where(x => x.IdVenta == id)
+            .ToListAsync();
 
             if (detalleVenta == null)
             {
